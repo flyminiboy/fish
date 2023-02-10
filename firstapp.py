@@ -7,28 +7,36 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-df = pd.DataFrame({
-  'first column': [1, 2, 3, 4],
-  'second column': [10, 20, 30, 40]
-})
+import os
+import openai
+
+st.title('飞🐶')
+
+i = st.text_input(label='输入问题', max_chars=30, value='', help='把你想要通过chatGPT回答的问题输入在这里', placeholder='请输入')
+
+
+# Load your API key from an environment variable or secret management service
+openai.api_key = os.getenv("ENV_OPENAPI_KEY")
+
+response = openai.Completion.create(model="text-davinci-003",
+  prompt=i,
+  temperature=0, 
+  max_tokens=1500,
+  top_p=1.0,
+  frequency_penalty=0.5,
+  presence_penalty=0.0)
+
+
+st.write(response.choices[0].text)
+
+st.write("我是分割线----------")
+st.json(response)
 
 # 图表
-chart_data = pd.DataFrame(
-     np.random.randn(20, 3),
-     columns=['a', 'b', 'c'])
-st.line_chart(chart_data)
 
-chart_data = pd.DataFrame(
-     np.random.randn(50, 3), 
-     columns=["a", "b", "c"])
-st.bar_chart(chart_data)
-chart_data = pd.DataFrame(
-     np.random.randn(20, 3),     
-     columns=['a', 'b', 'c'])
-st.area_chart(chart_data)
 
 # 侧边栏
-add_selectbox = st.sidebar.selectbox(
-    "How would you like to be contacted?", 
-    ("Email", "Home phone", "Mobile phone")
-)
+# add_selectbox = st.sidebar.selectbox(
+#     "How would you like to be contacted?", 
+#     ("Email", "Home phone", "Mobile phone")
+# )
